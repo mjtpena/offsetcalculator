@@ -1,4 +1,4 @@
-import { parseISO, addMonths, addWeeks, format, getMonth, differenceInCalendarDays } from 'date-fns';
+import { parseISO, addMonths, format, getMonth, differenceInCalendarDays } from 'date-fns';
 import type {
   Transaction, DailyBalance, LoanProfile,
   CashflowPattern, ProjectionConfig, ProjectionMonth,
@@ -116,14 +116,6 @@ export function extractCashflowPattern(transactions: Transaction[]): CashflowPat
 
 // ─── Forward projection ─────────────────────────────────────────
 
-function salaryPeriodsInMonth(freq: 'weekly' | 'fortnightly' | 'monthly'): number {
-  switch (freq) {
-    case 'weekly': return 52 / 12;
-    case 'fortnightly': return 26 / 12;
-    case 'monthly': return 1;
-  }
-}
-
 export function projectForward(
   dailyBalances: DailyBalance[],
   loan: LoanProfile,
@@ -143,9 +135,6 @@ export function projectForward(
   const results: ProjectionMonth[] = [];
 
   // Determine monthly net inflow
-  const salaryFreq = config.salaryFrequency ?? pattern.salaryFrequency;
-  const salaryAmt = config.salaryAmount ?? pattern.salaryAmount;
-  const monthlyIncome = salaryAmt * salaryPeriodsInMonth(salaryFreq);
   const netSavings = config.monthlyNetSavings ?? pattern.avgNetSavings;
 
   // Precompute lump sum lookup

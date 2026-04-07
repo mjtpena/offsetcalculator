@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
-import { GitCompare, Calendar, DollarSign, TrendingUp, ArrowRight } from 'lucide-react'
+import { GitCompare, Calendar, DollarSign, TrendingUp } from 'lucide-react'
 import { useStore } from '../store/useStore'
 import type { ScenarioProjection } from '../types'
 
@@ -28,7 +28,7 @@ function formatDateLabel(dateStr: string) {
 }
 
 export function Scenarios() {
-  const { scenarios, loan, analysisResult } = useStore()
+  const { scenarios } = useStore()
 
   // Build unified chart data: one entry per month across all scenarios
   const chartData = useMemo(() => {
@@ -71,8 +71,6 @@ export function Scenarios() {
     )
   }
 
-  const baseline = scenarios.find((s) => s.isBaseline)
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Header */}
@@ -113,7 +111,7 @@ export function Scenarios() {
                           const scenario = scenarios.find((s) => s.id === entry.dataKey)
                           return (
                             <p key={entry.dataKey as string} style={{ color: entry.color }}>
-                              {scenario?.label ?? entry.dataKey}: {formatAUD(entry.value as number)}
+                              {scenario?.label ?? String(entry.dataKey)}: {formatAUD(entry.value as number)}
                             </p>
                           )
                         })}

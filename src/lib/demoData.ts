@@ -26,7 +26,6 @@ export function generateDemoTransactions(): Transaction[] {
     transfer: ['TRANSFER TO SAVINGS', 'BPAY - COUNCIL RATES'],
   }
 
-  const current = new Date(startDate)
   let payday = new Date(startDate)
   payday.setDate(15)
   if (payday < startDate) payday.setMonth(payday.getMonth() + 1)

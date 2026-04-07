@@ -470,7 +470,7 @@ export function Calculator() {
                       />
                       <Tooltip
                         {...chartTooltipStyle}
-                        formatter={(value: number) => fmt.format(value)}
+                        formatter={(value: unknown) => fmt.format(value as number)}
                       />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                       <Area
@@ -521,7 +521,7 @@ export function Calculator() {
                       />
                       <Tooltip
                         {...chartTooltipStyle}
-                        formatter={(value: number) => fmt.format(value)}
+                        formatter={(value: unknown) => fmt.format(value as number)}
                       />
                       <Legend wrapperStyle={{ fontSize: 12 }} />
                       <Bar

@@ -93,7 +93,7 @@ export function Landing({ onNavigate }: LandingProps) {
                 icon: LineChart,
                 title: 'Static calculators lie',
                 description:
-                  'Traditional offset calculators ask for a single balance. But nobody keeps the same balance every day — your clients certainly don't.',
+                  "Traditional offset calculators ask for a single balance. But nobody keeps the same balance every day — your clients certainly don\u2019t.",
                 color: 'text-danger',
                 bg: 'bg-danger/10',
               },
@@ -163,7 +163,7 @@ export function Landing({ onNavigate }: LandingProps) {
                 icon: BarChart3,
                 title: 'Reconstruct Daily Balance',
                 description:
-                  'Every day's closing balance is calculated from the transaction history.',
+                  "Every day\u2019s closing balance is calculated from the transaction history.",
               },
               {
                 step: 4,
@@ -217,7 +217,7 @@ export function Landing({ onNavigate }: LandingProps) {
                 icon: TrendingUp,
                 title: 'Historical Interest Analysis',
                 description:
-                  'See exactly how much interest your client's offset account has saved over any period.',
+                  "See exactly how much interest your client\u2019s offset account has saved over any period.",
               },
               {
                 icon: LineChart,

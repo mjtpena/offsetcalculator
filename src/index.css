@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0f766e;
+  --color-primary-light: #14b8a6;
+  --color-primary-dark: #115e59;
+  --color-secondary: #1e40af;
+  --color-secondary-light: #3b82f6;
+  --color-accent: #f59e0b;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --color-surface-dark: #0f172a;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  }
+  .gradient-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-border p-6;
+  }
+  .card-hover {
+    @apply card transition-all duration-200 hover:shadow-md hover:border-primary/20;
+  }
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2;
+  }
+  .btn-secondary {
+    @apply bg-white hover:bg-surface-alt text-text-primary font-semibold py-2.5 px-5 rounded-lg border border-border transition-all duration-200 inline-flex items-center gap-2;
+  }
+  .btn-accent {
+    @apply bg-accent hover:bg-amber-600 text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2;
+  }
+  .input-field {
+    @apply w-full px-4 py-2.5 rounded-lg border border-border bg-white text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+  }
+  .label {
+    @apply block text-sm font-medium text-text-secondary mb-1.5;
+  }
+  .section-title {
+    @apply text-3xl font-bold text-text-primary;
+  }
+  .section-subtitle {
+    @apply text-lg text-text-secondary mt-2;
+  }
+  .stat-value {
+    @apply text-3xl font-bold text-primary;
+  }
+  .stat-label {
+    @apply text-sm text-text-secondary mt-1;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-success {
+    @apply badge bg-success/10 text-success;
+  }
+  .badge-warning {
+    @apply badge bg-warning/10 text-warning;
+  }
+  .badge-danger {
+    @apply badge bg-danger/10 text-danger;
+  }
+}
