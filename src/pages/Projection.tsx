@@ -141,6 +141,13 @@ export function Projection({ onNavigate }: ProjectionProps) {
     [projectionConfig.rateChangeEvents, setProjectionConfig],
   )
 
+  // Rebuild scenarios when projectionConfig changes
+  useEffect(() => {
+    if (!dailyBalances.length || !cashflowPattern) return
+    const updatedScenarios = buildScenarios(dailyBalances, loan, cashflowPattern, projectionConfig)
+    setScenarios(updatedScenarios)
+  }, [projectionConfig, dailyBalances, loan, cashflowPattern, setScenarios])
+
   if (!scenarios.length) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 text-center">

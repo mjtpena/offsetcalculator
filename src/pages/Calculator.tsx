@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo } from 'react'
 import {
   AreaChart,
   Area,
@@ -10,37 +10,37 @@ import {
   BarChart,
   Bar,
   Legend,
-} from "recharts";
+} from 'recharts'
 import {
   DollarSign,
   Clock,
   TrendingDown,
   Percent,
   Calculator as CalculatorIcon,
-} from "lucide-react";
+} from 'lucide-react'
 
-const fmt = new Intl.NumberFormat("en-AU", {
-  style: "currency",
-  currency: "AUD",
+const fmt = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
-});
+})
 
-const fmtFull = new Intl.NumberFormat("en-AU", {
-  style: "currency",
-  currency: "AUD",
+const fmtFull = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-});
+})
 
 interface SliderInputProps {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  format: (v: number) => string;
-  onChange: (v: number) => void;
+  label: string
+  value: number
+  min: number
+  max: number
+  step: number
+  format: (v: number) => string
+  onChange: (v: number) => void
 }
 
 function SliderInput({
@@ -74,28 +74,28 @@ function SliderInput({
         <span>{format(max)}</span>
       </div>
     </div>
-  );
+  )
 }
 
 interface MonthData {
-  month: number;
-  balanceNoOffset: number;
-  balanceWithOffset: number;
-  interestNoOffset: number;
-  interestWithOffset: number;
+  month: number
+  balanceNoOffset: number
+  balanceWithOffset: number
+  interestNoOffset: number
+  interestWithOffset: number
 }
 
 interface SimResult {
-  monthlyRepayment: number;
-  totalInterestNoOffset: number;
-  totalInterestWithOffset: number;
-  totalSaved: number;
-  monthsWithoutOffset: number;
-  monthsWithOffset: number;
-  timeSavedMonths: number;
-  effectiveRate: number;
-  monthlyData: MonthData[];
-  annualInterest: { year: number; withoutOffset: number; withOffset: number }[];
+  monthlyRepayment: number
+  totalInterestNoOffset: number
+  totalInterestWithOffset: number
+  totalSaved: number
+  monthsWithoutOffset: number
+  monthsWithOffset: number
+  timeSavedMonths: number
+  effectiveRate: number
+  monthlyData: MonthData[]
+  annualInterest: { year: number; withoutOffset: number; withOffset: number }[]
 }
 
 function simulate(
@@ -105,70 +105,70 @@ function simulate(
   offsetBalance: number,
   monthlyContribution: number
 ): SimResult {
-  const r = annualRate / 100 / 12;
-  const n = loanTermYears * 12;
+  const r = annualRate / 100 / 12
+  const n = loanTermYears * 12
 
   // Standard P&I repayment
   const monthlyRepayment =
     r > 0
       ? (loanAmount * (r * Math.pow(1 + r, n))) / (Math.pow(1 + r, n) - 1)
-      : loanAmount / n;
+      : loanAmount / n
 
-  const monthlyData: MonthData[] = [];
+  const monthlyData: MonthData[] = []
   const annualInterestMap = new Map<
     number,
     { withoutOffset: number; withOffset: number }
-  >();
+  >()
 
   // Without offset
-  let balNo = loanAmount;
-  let totalIntNo = 0;
-  let monthsNo = 0;
+  let balNo = loanAmount
+  let totalIntNo = 0
+  let monthsNo = 0
 
   // With offset
-  let balWith = loanAmount;
-  let totalIntWith = 0;
-  let monthsWith = 0;
-  let curOffset = offsetBalance;
+  let balWith = loanAmount
+  let totalIntWith = 0
+  let monthsWith = 0
+  let curOffset = offsetBalance
 
-  const maxMonths = n + 120; // safety cap
+  const maxMonths = n + 120 // safety cap
 
   for (let m = 1; m <= maxMonths; m++) {
-    const noFinished = balNo <= 0;
-    const withFinished = balWith <= 0;
-    if (noFinished && withFinished) break;
+    const noFinished = balNo <= 0
+    const withFinished = balWith <= 0
+    if (noFinished && withFinished) break
 
     // Without offset
-    let intNo = 0;
+    let intNo = 0
     if (!noFinished) {
-      intNo = balNo * r;
-      const principalNo = monthlyRepayment - intNo;
-      balNo = Math.max(0, balNo - principalNo);
-      totalIntNo += intNo;
-      monthsNo = m;
+      intNo = balNo * r
+      const principalNo = monthlyRepayment - intNo
+      balNo = Math.max(0, balNo - principalNo)
+      totalIntNo += intNo
+      monthsNo = m
     }
 
     // With offset
-    let intWith = 0;
+    let intWith = 0
     if (!withFinished) {
-      const effectivePrincipal = Math.max(0, balWith - curOffset);
-      intWith = effectivePrincipal * r;
-      const principalWith = monthlyRepayment - intWith;
-      balWith = Math.max(0, balWith - principalWith);
-      totalIntWith += intWith;
-      monthsWith = m;
-      curOffset += monthlyContribution;
+      const effectivePrincipal = Math.max(0, balWith - curOffset)
+      intWith = effectivePrincipal * r
+      const principalWith = monthlyRepayment - intWith
+      balWith = Math.max(0, balWith - principalWith)
+      totalIntWith += intWith
+      monthsWith = m
+      curOffset += monthlyContribution
     }
 
     // Record yearly interest
-    const year = Math.ceil(m / 12);
+    const year = Math.ceil(m / 12)
     const existing = annualInterestMap.get(year) || {
       withoutOffset: 0,
       withOffset: 0,
-    };
-    existing.withoutOffset += intNo;
-    existing.withOffset += intWith;
-    annualInterestMap.set(year, existing);
+    }
+    existing.withoutOffset += intNo
+    existing.withOffset += intWith
+    annualInterestMap.set(year, existing)
 
     // Sample monthly data (every month for small loans, sampled for large)
     if (m <= 12 || m % 3 === 0 || noFinished || withFinished) {
@@ -178,17 +178,17 @@ function simulate(
         balanceWithOffset: Math.round(balWith),
         interestNoOffset: Math.round(intNo),
         interestWithOffset: Math.round(intWith),
-      });
+      })
     }
   }
 
-  const timeSavedMonths = Math.max(0, monthsNo - monthsWith);
+  const timeSavedMonths = Math.max(0, monthsNo - monthsWith)
 
   // Effective rate: what rate on the full loan would produce the same interest as with offset
   const effectiveRate =
     loanAmount > 0
       ? (totalIntWith / totalIntNo) * annualRate
-      : 0;
+      : 0
 
   const annualInterest = Array.from(annualInterestMap.entries())
     .slice(0, 10)
@@ -196,7 +196,7 @@ function simulate(
       year,
       withoutOffset: Math.round(data.withoutOffset),
       withOffset: Math.round(data.withOffset),
-    }));
+    }))
 
   return {
     monthlyRepayment,
@@ -209,32 +209,32 @@ function simulate(
     effectiveRate,
     monthlyData,
     annualInterest,
-  };
+  }
 }
 
 function formatTimeSaved(months: number): string {
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
-  if (years === 0) return `${rem} months`;
-  if (rem === 0) return `${years} year${years !== 1 ? "s" : ""}`;
-  return `${years}y ${rem}m`;
+  const years = Math.floor(months / 12)
+  const rem = months % 12
+  if (years === 0) return `${rem} months`
+  if (rem === 0) return `${years} year${years !== 1 ? 's' : ''}`
+  return `${years}y ${rem}m`
 }
 
 const chartTooltipStyle = {
   contentStyle: {
-    backgroundColor: "#ffffff",
-    border: "1px solid #e2e8f0",
-    borderRadius: "8px",
-    fontSize: "13px",
+    backgroundColor: '#ffffff',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    fontSize: '13px',
   },
-};
+}
 
 export function Calculator() {
-  const [loanAmount, setLoanAmount] = useState(600_000);
-  const [interestRate, setInterestRate] = useState(6.25);
-  const [loanTerm, setLoanTerm] = useState(30);
-  const [offsetBalance, setOffsetBalance] = useState(50_000);
-  const [monthlyContribution, setMonthlyContribution] = useState(500);
+  const [loanAmount, setLoanAmount] = useState(600_000)
+  const [interestRate, setInterestRate] = useState(6.25)
+  const [loanTerm, setLoanTerm] = useState(30)
+  const [offsetBalance, setOffsetBalance] = useState(50_000)
+  const [monthlyContribution, setMonthlyContribution] = useState(500)
 
   const result = useMemo(
     () =>
@@ -246,24 +246,24 @@ export function Calculator() {
         monthlyContribution
       ),
     [loanAmount, interestRate, loanTerm, offsetBalance, monthlyContribution]
-  );
+  )
 
   // Convert monthly data months to years for chart readability
   const balanceChartData = useMemo(
     () =>
       result.monthlyData.map((d) => ({
         year: +(d.month / 12).toFixed(1),
-        "Without Offset": d.balanceNoOffset,
-        "With Offset": d.balanceWithOffset,
+        'Without Offset': d.balanceNoOffset,
+        'With Offset': d.balanceWithOffset,
       })),
     [result.monthlyData]
-  );
+  )
 
   const monthlySavings = useMemo(() => {
-    if (result.monthlyData.length < 2) return 0;
-    const first = result.monthlyData[0];
-    return first.interestNoOffset - first.interestWithOffset;
-  }, [result.monthlyData]);
+    if (result.monthlyData.length < 2) return 0
+    const first = result.monthlyData[0]
+    return first.interestNoOffset - first.interestWithOffset
+  }, [result.monthlyData])
 
   return (
     <div className="min-h-screen bg-surface-alt">
@@ -365,7 +365,7 @@ export function Calculator() {
                 max={30}
                 step={1}
                 format={(v) =>
-                  `${v} year${v !== 1 ? "s" : ""}`
+                  `${v} year${v !== 1 ? 's' : ''}`
                 }
                 onChange={setLoanTerm}
               />
@@ -432,7 +432,7 @@ export function Calculator() {
                     Loan Paid Off In
                   </p>
                   <p className="text-xl font-bold text-primary">
-                    {formatTimeSaved(result.monthsWithOffset)}{" "}
+                    {formatTimeSaved(result.monthsWithOffset)}{' '}
                     <span className="text-sm font-normal text-text-muted">
                       (vs {formatTimeSaved(result.monthsWithoutOffset)})
                     </span>
@@ -455,18 +455,18 @@ export function Calculator() {
                       <XAxis
                         dataKey="year"
                         label={{
-                          value: "Years",
-                          position: "insideBottomRight",
+                          value: 'Years',
+                          position: 'insideBottomRight',
                           offset: -5,
-                          style: { fontSize: 12, fill: "#475569" },
+                          style: { fontSize: 12, fill: '#475569' },
                         }}
-                        tick={{ fontSize: 12, fill: "#475569" }}
+                        tick={{ fontSize: 12, fill: '#475569' }}
                       />
                       <YAxis
                         tickFormatter={(v: number) =>
                           `$${(v / 1000).toFixed(0)}k`
                         }
-                        tick={{ fontSize: 12, fill: "#475569" }}
+                        tick={{ fontSize: 12, fill: '#475569' }}
                       />
                       <Tooltip
                         {...chartTooltipStyle}
@@ -506,18 +506,18 @@ export function Calculator() {
                       <XAxis
                         dataKey="year"
                         label={{
-                          value: "Year",
-                          position: "insideBottomRight",
+                          value: 'Year',
+                          position: 'insideBottomRight',
                           offset: -5,
-                          style: { fontSize: 12, fill: "#475569" },
+                          style: { fontSize: 12, fill: '#475569' },
                         }}
-                        tick={{ fontSize: 12, fill: "#475569" }}
+                        tick={{ fontSize: 12, fill: '#475569' }}
                       />
                       <YAxis
                         tickFormatter={(v: number) =>
                           `$${(v / 1000).toFixed(0)}k`
                         }
-                        tick={{ fontSize: 12, fill: "#475569" }}
+                        tick={{ fontSize: 12, fill: '#475569' }}
                       />
                       <Tooltip
                         {...chartTooltipStyle}
@@ -545,5 +545,5 @@ export function Calculator() {
         </div>
       </div>
     </div>
-  );
+  )
 }

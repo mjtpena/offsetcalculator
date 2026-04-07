@@ -1,4 +1,4 @@
-#  Smart Offset Account CalculatorOffsetIQ 
+# OffsetIQ — Smart Offset Account Calculator
 
 **Show your clients what their offset is actually doing.**
 
@@ -6,14 +6,14 @@ A cashflow-aware offset account calculator and mortgage projection platform for 
 
 ## Features
 
-- **Interactive  Instant offset savings estimates with adjustable slidersCalculator** 
-- **Bank Statement  CSV auto-detection for 9 major Australian banksImport** 
-- **Daily Balance  Exact offset balance for every calendar dayReconstruction** 
-- **Historical Interest  Actual interest saved vs theoretical with efficiency scoringAnalysis** 
-- **Forward  Savings projections based on detected cashflow patternsProjections** 
-- **Scenario  Compare up to 4 scenarios side-by-sideComparison** 
-- **Auto-Generated  Personalised recommendations from spending patternsInsights** 
-- **Demo  Try the full analysis flow with realistic sample dataData** 
+- **Interactive Calculator** — Instant offset savings estimates with adjustable sliders
+- **Bank Statement Import** — CSV auto-detection for 9 major Australian banks
+- **Daily Balance Reconstruction** — Exact offset balance for every calendar day
+- **Historical Interest Analysis** — Actual interest saved vs theoretical with efficiency scoring
+- **Forward Projections** — Savings projections based on detected cashflow patterns
+- **Scenario Comparison** — Compare up to 4 scenarios side-by-side
+- **Auto-Generated Insights** — Personalised recommendations from spending patterns
+- **Demo Data** — Try the full analysis flow with realistic sample data
 
 ## Tech Stack
 
@@ -31,4 +31,4 @@ npm run dev
 
 ## License
 
- Datachain Consulting Pty Ltd. All rights reserved.
+© Datachain Consulting Pty Ltd. All rights reserved.
