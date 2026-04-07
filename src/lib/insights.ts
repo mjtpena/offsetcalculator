@@ -78,7 +78,7 @@ export function generateInsights(
 
   // ─── 4. Milestone insight: projected payoff acceleration ───────
   if (loan.repaymentType === 'PI' && avgBalance > 0) {
-    const monthlyRate = loan.annualRate / 100 / 12;
+    const monthlyRate = loan.annualRate / 12;
     const totalMonths = loan.termYears * 12;
 
     // Without offset
@@ -161,17 +161,15 @@ function estimateAdditionalSaving(
   currentAvgBalance: number,
   newAvgBalance: number,
 ): number {
-  const rate = loan.annualRate / 100;
   const currentEffective = Math.max(0, loan.currentBalance - currentAvgBalance);
   const newEffective = Math.max(0, loan.currentBalance - newAvgBalance);
-  const currentAnnualInterest = currentEffective * rate;
-  const newAnnualInterest = newEffective * rate;
+  const currentAnnualInterest = currentEffective * loan.annualRate;
+  const newAnnualInterest = newEffective * loan.annualRate;
   return Math.round((currentAnnualInterest - newAnnualInterest) * 100) / 100;
 }
 
 function estimateTimingSaving(loan: LoanProfile, dipAmount: number): number {
   // If the dip could be smoothed out, estimate saving
-  const rate = loan.annualRate / 100;
   // The dip happens for roughly half the month
-  return Math.round((dipAmount * rate * 0.5 / 12) * 100) / 100;
+  return Math.round((dipAmount * loan.annualRate * 0.5 / 12) * 100) / 100;
 }

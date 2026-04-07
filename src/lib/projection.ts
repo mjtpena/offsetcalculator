@@ -156,8 +156,8 @@ export function projectForward(
 
   // P&I monthly payment (recalculated when rate changes)
   function calcMonthlyPayment(balance: number, rate: number, remainingMonths: number): number {
-    if (loan.repaymentType === 'IO') return balance * (rate / 100 / 12);
-    const mr = rate / 100 / 12;
+    if (loan.repaymentType === 'IO') return balance * (rate / 12);
+    const mr = rate / 12;
     if (mr === 0) return remainingMonths > 0 ? balance / remainingMonths : 0;
     return balance * (mr * Math.pow(1 + mr, remainingMonths)) / (Math.pow(1 + mr, remainingMonths) - 1);
   }
@@ -191,7 +191,7 @@ export function projectForward(
     currentBalance = Math.max(0, currentBalance + monthlyNet + lumpSum);
 
     // Loan interest for this month
-    const monthlyRate = currentRate / 100 / 12;
+    const monthlyRate = currentRate / 12;
     const loanInterest = loanBalance * monthlyRate;
 
     // Interest with offset
@@ -204,7 +204,7 @@ export function projectForward(
     // Update loan balance
     const remainingMonths = Math.max(1, totalMonths - elapsedMonths - m);
     const monthlyPayment = calcMonthlyPayment(loanBalance, currentRate, remainingMonths);
-    const principalRepaid = monthlyPayment - loanInterest;
+    const principalRepaid = monthlyPayment - interestWithOffset;
     if (loan.repaymentType === 'PI') {
       loanBalance = Math.max(0, loanBalance - principalRepaid);
     }

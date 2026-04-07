@@ -28,7 +28,7 @@ function estimateLoanBalance(loan: LoanProfile, dateStr: string): number {
   const totalMonths = loan.termYears * 12;
 
   // Calculate monthly payment using original amount and initial rate
-  const monthlyRate = loan.annualRate / 100 / 12;
+  const monthlyRate = loan.annualRate / 12;
   if (monthlyRate === 0) {
     // Zero interest — simple straight-line
     const elapsed = differenceInCalendarDays(targetDate, startDate) / 30.44;
@@ -46,7 +46,7 @@ function estimateLoanBalance(loan: LoanProfile, dateStr: string): number {
     const nextMonth = addMonths(current, 1);
     const currentDateStr = format(current, 'yyyy-MM-dd');
     const rate = getRateForDate(loan, currentDateStr);
-    const mr = rate / 100 / 12;
+    const mr = rate / 12;
 
     const interestPortion = balance * mr;
     const principalPortion = monthlyPayment - interestPortion;
@@ -89,7 +89,7 @@ export function calculateInterest(
 
   for (const day of dailyBalances) {
     const annualRate = getRateForDate(loan, day.date);
-    const dailyRate = annualRate / 100 / 365;
+    const dailyRate = annualRate / 365;
     const loanBalance = estimateLoanBalance(loan, day.date);
 
     // Interest without offset (full loan balance)

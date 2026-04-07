@@ -146,9 +146,9 @@ export function Import({ onNavigate }: ImportProps) {
       const pattern = extractCashflowPattern(parsedTransactions)
       setCashflowPattern(pattern)
 
-      // 5. Build scenarios (includes projection)
-      const projectionConfig = { projectionMonths: 60 }
-      const scenarios = buildScenarios(balances, currentLoan, pattern, projectionConfig)
+      // 5. Build scenarios using the store's projectionConfig
+      const currentConfig = useStore.getState().projectionConfig
+      const scenarios = buildScenarios(balances, currentLoan, pattern, currentConfig)
       setScenarios(scenarios)
 
       // 6. Generate insights
@@ -328,7 +328,7 @@ export function Import({ onNavigate }: ImportProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".csv,.ofx,.qfx,.xlsx"
+          accept=".csv"
           className="hidden"
           onChange={handleFileSelect}
         />
@@ -337,7 +337,7 @@ export function Import({ onNavigate }: ImportProps) {
           {isDragging ? 'Drop your file here' : 'Drag & drop your statement file'}
         </p>
         <p className="text-sm text-text-secondary mt-1">
-          or click to browse • Supports .csv, .ofx, .qfx, .xlsx
+          or click to browse • Supports .csv
         </p>
       </div>
 

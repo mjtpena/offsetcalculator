@@ -350,7 +350,7 @@ export function Landing({ onNavigate }: LandingProps) {
                   'Basic branded reports',
                 ],
                 cta: 'Start Free Trial',
-                ctaView: 'register',
+                ctaView: 'import',
               },
               {
                 name: 'Team',
@@ -366,7 +366,7 @@ export function Landing({ onNavigate }: LandingProps) {
                   'Priority support',
                 ],
                 cta: 'Start Free Trial',
-                ctaView: 'register',
+                ctaView: 'import',
               },
               {
                 name: 'Practice',
@@ -383,7 +383,7 @@ export function Landing({ onNavigate }: LandingProps) {
                   'Dedicated account manager',
                 ],
                 cta: 'Contact Sales',
-                ctaView: 'contact',
+                ctaView: 'calculator',
               },
             ].map((tier) => (
               <div
@@ -483,10 +483,10 @@ export function Landing({ onNavigate }: LandingProps) {
               <ChevronRight className="w-5 h-5" />
             </button>
             <button
-              onClick={() => onNavigate('register')}
+              onClick={() => onNavigate('import')}
               className="btn-primary text-lg py-3 px-8 rounded-xl"
             >
-              Create Broker Account
+              Import Statement
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>

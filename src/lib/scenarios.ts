@@ -63,7 +63,7 @@ export function buildScenarios(
   // 4. Rate Rise +0.50% — shows increased savings from offset at higher rate
   const rateRiseLoan: LoanProfile = {
     ...loan,
-    annualRate: loan.annualRate + 0.5,
+    annualRate: loan.annualRate + 0.005,
   }
   const rateRiseData = projectForward(dailyBalances, rateRiseLoan, pattern, config)
   const rateRise: ScenarioProjection = {

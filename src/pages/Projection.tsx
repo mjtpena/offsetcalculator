@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import {
   AreaChart,
   Area,
@@ -21,6 +21,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useStore } from '../store/useStore'
+import { buildScenarios } from '../lib/scenarios'
 
 const formatAUD = (value: number) =>
   new Intl.NumberFormat('en-AU', {
@@ -46,10 +47,12 @@ interface ProjectionProps {
 export function Projection({ onNavigate }: ProjectionProps) {
   const {
     scenarios,
+    setScenarios,
     cashflowPattern,
     projectionConfig,
     setProjectionConfig,
     loan,
+    dailyBalances,
   } = useStore()
 
   const [lumpSumDate, setLumpSumDate] = useState('')
