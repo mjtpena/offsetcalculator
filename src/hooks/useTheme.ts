@@ -40,11 +40,15 @@ export function useTheme() {
     applyTheme(resolved)
   }, [resolved])
 
-  // Listen for system theme changes
+  // Listen for system theme changes and keep React state in sync
   useEffect(() => {
     if (theme !== 'system') return
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = () => applyTheme(getSystemTheme())
+    const handler = () => {
+      applyTheme(getSystemTheme())
+      // Force re-render so `resolved` stays accurate
+      setThemeState('system')
+    }
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [theme])

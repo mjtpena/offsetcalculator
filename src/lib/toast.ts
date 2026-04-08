@@ -33,6 +33,7 @@ export function dismissToast(id: string) {
 
 export function subscribeToasts(listener: (toasts: Toast[]) => void) {
   listeners.push(listener)
+  listener([...toasts])
   return () => {
     listeners = listeners.filter((l) => l !== listener)
   }

@@ -64,6 +64,7 @@ export function Scenarios() {
           <GitCompare size={48} className="mx-auto text-text-muted mb-4" />
           <h2 className="section-title text-xl">No Scenarios Available</h2>
           <p className="text-text-secondary dark:text-slate-400 mt-2">
+            Generate projections first to compare scenarios side by side.
           </p>
         </div>
       </div>

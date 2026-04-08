@@ -156,6 +156,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
           <TrendingUp size={48} className="mx-auto text-text-muted mb-4" />
           <h2 className="section-title text-xl">No Projection Data</h2>
           <p className="text-text-secondary dark:text-slate-400 mt-2">
+            Run an analysis first to generate forward projections.
           </p>
           <button className="btn-primary mt-6" onClick={() => onNavigate('analysis')}>
             Go to Analysis

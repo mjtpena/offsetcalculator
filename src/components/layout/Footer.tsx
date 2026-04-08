@@ -12,19 +12,19 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-3">Product</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Offset Calculator</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Statement Import</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Interest Analysis</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Forward Projections</li>
+              <li>Offset Calculator</li>
+              <li>Statement Import</li>
+              <li>Interest Analysis</li>
+              <li>Forward Projections</li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold mb-3">For Brokers</h4>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Starter — $99/mo</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Team — $249/mo</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Practice — $499/mo</li>
-              <li className="hover:text-slate-300 transition-colors cursor-pointer">Enterprise — Custom</li>
+              <li>Starter — $99/mo</li>
+              <li>Team — $249/mo</li>
+              <li>Practice — $499/mo</li>
+              <li>Enterprise — Custom</li>
             </ul>
           </div>
         </div>
