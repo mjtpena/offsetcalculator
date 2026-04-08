@@ -18,6 +18,7 @@ import {
   Percent,
   Calculator as CalculatorIcon,
 } from 'lucide-react'
+import { AnimatedNumber } from '../components/ui/AnimatedNumber'
 
 const fmt = new Intl.NumberFormat('en-AU', {
   style: 'currency',
@@ -52,11 +53,12 @@ function SliderInput({
   format,
   onChange,
 }: SliderInputProps) {
+  const fillPercent = ((value - min) / (max - min)) * 100
   return (
     <div className="mb-5">
       <div className="flex justify-between items-center mb-1.5">
         <label className="label mb-0">{label}</label>
-        <span className="text-sm font-semibold text-primary">
+        <span className="text-sm font-semibold text-primary dark:text-primary-light">
           {format(value)}
         </span>
       </div>
@@ -67,7 +69,8 @@ function SliderInput({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-surface-alt rounded-lg appearance-none cursor-pointer accent-primary"
+        className="w-full h-2 rounded-lg cursor-pointer"
+        style={{ '--slider-fill': `${fillPercent}%` } as React.CSSProperties}
       />
       <div className="flex justify-between text-xs text-text-muted mt-1">
         <span>{format(min)}</span>
@@ -222,8 +225,8 @@ function formatTimeSaved(months: number): string {
 
 const chartTooltipStyle = {
   contentStyle: {
-    backgroundColor: '#ffffff',
-    border: '1px solid #e2e8f0',
+    backgroundColor: 'var(--tooltip-bg, #ffffff)',
+    border: '1px solid var(--tooltip-border, #e2e8f0)',
     borderRadius: '8px',
     fontSize: '13px',
   },
@@ -265,8 +268,13 @@ export function Calculator() {
     return first.interestNoOffset - first.interestWithOffset
   }, [result.monthlyData])
 
+  // Detect dark mode for chart colors
+  const isDark = document.documentElement.classList.contains('dark')
+  const gridColor = isDark ? '#334155' : '#e2e8f0'
+  const tickColor = isDark ? '#94a3b8' : '#475569'
+
   return (
-    <div className="min-h-screen bg-surface-alt">
+    <div className="min-h-screen bg-surface-alt dark:bg-[#0b1120]">
       {/* Header */}
       <div className="gradient-primary py-10 px-4">
         <div className="max-w-7xl mx-auto">
@@ -290,15 +298,17 @@ export function Calculator() {
               <DollarSign className="w-6 h-6 text-success" />
             </div>
             <div>
-              <p className="stat-value text-2xl">
-                {fmt.format(result.totalSaved)}
-              </p>
+              <AnimatedNumber
+                value={result.totalSaved}
+                format={(v) => fmt.format(v)}
+                className="stat-value text-2xl !text-success"
+              />
               <p className="stat-label">Total Interest Saved</p>
             </div>
           </div>
           <div className="card flex items-start gap-4">
             <div className="p-2.5 rounded-lg bg-primary/10">
-              <Clock className="w-6 h-6 text-primary" />
+              <Clock className="w-6 h-6 text-primary dark:text-primary-light" />
             </div>
             <div>
               <p className="stat-value text-2xl">
@@ -309,12 +319,14 @@ export function Calculator() {
           </div>
           <div className="card flex items-start gap-4">
             <div className="p-2.5 rounded-lg bg-secondary/10">
-              <TrendingDown className="w-6 h-6 text-secondary" />
+              <TrendingDown className="w-6 h-6 text-secondary dark:text-secondary-light" />
             </div>
             <div>
-              <p className="stat-value text-2xl">
-                {fmtFull.format(monthlySavings)}
-              </p>
+              <AnimatedNumber
+                value={monthlySavings}
+                format={(v) => fmtFull.format(v)}
+                className="stat-value text-2xl"
+              />
               <p className="stat-label">Monthly Interest Savings</p>
             </div>
           </div>
@@ -323,9 +335,11 @@ export function Calculator() {
               <Percent className="w-6 h-6 text-accent" />
             </div>
             <div>
-              <p className="stat-value text-2xl">
-                {result.effectiveRate.toFixed(2)}%
-              </p>
+              <AnimatedNumber
+                value={result.effectiveRate}
+                format={(v) => `${v.toFixed(2)}%`}
+                className="stat-value text-2xl"
+              />
               <p className="stat-label">Effective Interest Rate</p>
             </div>
           </div>
@@ -335,7 +349,7 @@ export function Calculator() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
           {/* Left: Inputs */}
           <div className="lg:col-span-4">
-            <div className="card sticky top-6">
+            <div className="card sticky top-20">
               <h2 className="section-title text-xl mb-6">Loan Details</h2>
 
               <SliderInput
@@ -370,7 +384,7 @@ export function Calculator() {
                 onChange={setLoanTerm}
               />
 
-              <hr className="my-5 border-border" />
+              <hr className="my-5 border-border dark:border-slate-700" />
               <h2 className="section-title text-xl mb-4">Offset Account</h2>
 
               <SliderInput
@@ -403,35 +417,35 @@ export function Calculator() {
                 Repayment Summary
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-lg bg-surface-alt">
-                  <p className="text-sm text-text-secondary mb-1">
+                <div className="p-4 rounded-lg bg-surface-alt dark:bg-slate-800/50">
+                  <p className="text-sm text-text-secondary dark:text-slate-400 mb-1">
                     Monthly Repayment
                   </p>
-                  <p className="text-xl font-bold text-text-primary">
+                  <p className="text-xl font-bold text-text-primary dark:text-white">
                     {fmtFull.format(result.monthlyRepayment)}
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-surface-alt">
-                  <p className="text-sm text-text-secondary mb-1">
+                <div className="p-4 rounded-lg bg-surface-alt dark:bg-slate-800/50">
+                  <p className="text-sm text-text-secondary dark:text-slate-400 mb-1">
                     Total Interest (No Offset)
                   </p>
                   <p className="text-xl font-bold text-danger">
                     {fmt.format(result.totalInterestNoOffset)}
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-surface-alt">
-                  <p className="text-sm text-text-secondary mb-1">
+                <div className="p-4 rounded-lg bg-surface-alt dark:bg-slate-800/50">
+                  <p className="text-sm text-text-secondary dark:text-slate-400 mb-1">
                     Total Interest (With Offset)
                   </p>
                   <p className="text-xl font-bold text-success">
                     {fmt.format(result.totalInterestWithOffset)}
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-                  <p className="text-sm text-text-secondary mb-1">
+                <div className="p-4 rounded-lg bg-primary/5 dark:bg-primary/10 border border-primary/20">
+                  <p className="text-sm text-text-secondary dark:text-slate-400 mb-1">
                     Loan Paid Off In
                   </p>
-                  <p className="text-xl font-bold text-primary">
+                  <p className="text-xl font-bold text-primary dark:text-primary-light">
                     {formatTimeSaved(result.monthsWithOffset)}{' '}
                     <span className="text-sm font-normal text-text-muted">
                       (vs {formatTimeSaved(result.monthsWithoutOffset)})
@@ -445,28 +459,28 @@ export function Calculator() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* Area Chart: Loan Balance Over Time */}
               <div className="card">
-                <h3 className="text-lg font-semibold text-text-primary mb-4">
+                <h3 className="text-lg font-semibold text-text-primary dark:text-white mb-4">
                   Loan Balance Over Time
                 </h3>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={balanceChartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                       <XAxis
                         dataKey="year"
                         label={{
                           value: 'Years',
                           position: 'insideBottomRight',
                           offset: -5,
-                          style: { fontSize: 12, fill: '#475569' },
+                          style: { fontSize: 12, fill: tickColor },
                         }}
-                        tick={{ fontSize: 12, fill: '#475569' }}
+                        tick={{ fontSize: 12, fill: tickColor }}
                       />
                       <YAxis
                         tickFormatter={(v: number) =>
                           `$${(v / 1000).toFixed(0)}k`
                         }
-                        tick={{ fontSize: 12, fill: '#475569' }}
+                        tick={{ fontSize: 12, fill: tickColor }}
                       />
                       <Tooltip
                         {...chartTooltipStyle}
@@ -496,28 +510,28 @@ export function Calculator() {
 
               {/* Bar Chart: Annual Interest Comparison */}
               <div className="card">
-                <h3 className="text-lg font-semibold text-text-primary mb-4">
+                <h3 className="text-lg font-semibold text-text-primary dark:text-white mb-4">
                   Annual Interest (First 10 Years)
                 </h3>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={result.annualInterest}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                       <XAxis
                         dataKey="year"
                         label={{
                           value: 'Year',
                           position: 'insideBottomRight',
                           offset: -5,
-                          style: { fontSize: 12, fill: '#475569' },
+                          style: { fontSize: 12, fill: tickColor },
                         }}
-                        tick={{ fontSize: 12, fill: '#475569' }}
+                        tick={{ fontSize: 12, fill: tickColor }}
                       />
                       <YAxis
                         tickFormatter={(v: number) =>
                           `$${(v / 1000).toFixed(0)}k`
                         }
-                        tick={{ fontSize: 12, fill: '#475569' }}
+                        tick={{ fontSize: 12, fill: tickColor }}
                       />
                       <Tooltip
                         {...chartTooltipStyle}

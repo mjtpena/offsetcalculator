@@ -26,6 +26,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import { useStore } from '../store/useStore'
+import { AnimatedNumber } from '../components/ui/AnimatedNumber'
 import type { Insight } from '../types'
 
 const formatAUD = (value: number) =>
@@ -100,6 +101,10 @@ export function Analysis({ onNavigate }: AnalysisProps) {
 
   const { totalSaved, totalInterestPaid, totalInterestWithoutOffset, efficiencyScore } = analysisResult
 
+  const isDark = document.documentElement.classList.contains('dark')
+  const gridColor = isDark ? '#334155' : '#e2e8f0'
+  const tickColor = isDark ? '#94a3b8' : '#64748b'
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Header */}
@@ -120,38 +125,54 @@ export function Analysis({ onNavigate }: AnalysisProps) {
             </div>
             <span className="stat-label !mt-0">Total Interest Saved</span>
           </div>
-          <p className="text-3xl font-bold text-success">{formatAUD(totalSaved)}</p>
+          <AnimatedNumber
+            value={totalSaved}
+            format={(v) => formatAUD(v)}
+            className="text-3xl font-bold text-success"
+          />
         </div>
 
         <div className="card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingDown size={18} className="text-primary" />
+              <TrendingDown size={18} className="text-primary dark:text-primary-light" />
             </div>
             <span className="stat-label !mt-0">Interest With Offset</span>
           </div>
-          <p className="stat-value">{formatAUD(totalInterestPaid)}</p>
+          <AnimatedNumber
+            value={totalInterestPaid}
+            format={(v) => formatAUD(v)}
+            className="stat-value"
+          />
         </div>
 
         <div className="card">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
-              <TrendingUp size={18} className="text-text-secondary" />
+            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+              <TrendingUp size={18} className="text-text-secondary dark:text-slate-400" />
             </div>
             <span className="stat-label !mt-0">Interest Without Offset</span>
           </div>
-          <p className="text-3xl font-bold text-text-secondary">{formatAUD(totalInterestWithoutOffset)}</p>
+          <AnimatedNumber
+            value={totalInterestWithoutOffset}
+            format={(v) => formatAUD(v)}
+            className="text-3xl font-bold text-text-secondary dark:text-slate-400"
+          />
         </div>
 
         <div className="card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Percent size={18} className="text-primary" />
+              <Percent size={18} className="text-primary dark:text-primary-light" />
             </div>
             <span className="stat-label !mt-0">Efficiency Score</span>
           </div>
           <div className="flex items-center gap-3">
-            <p className="stat-value">{(efficiencyScore * 100).toFixed(1)}%</p>
+            <AnimatedNumber
+              value={efficiencyScore * 100}
+              format={(v) => `${v.toFixed(1)}%`}
+              className="stat-value"
+            />
             <span
               className={
                 efficiencyScore >= 0.7
@@ -170,7 +191,7 @@ export function Analysis({ onNavigate }: AnalysisProps) {
       {/* Daily Balance Chart */}
       {dailyChartData.length > 0 && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Daily Offset Balance</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Daily Offset Balance</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyChartData}>
@@ -180,15 +201,15 @@ export function Analysis({ onNavigate }: AnalysisProps) {
                     <stop offset="95%" stopColor="#0f766e" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                   interval="preserveStartEnd"
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
@@ -223,18 +244,18 @@ export function Analysis({ onNavigate }: AnalysisProps) {
       {/* Monthly Interest Comparison */}
       {monthlyChartData.length > 0 && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Monthly Interest Comparison</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Monthly Interest Comparison</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${v.toFixed(0)}`}
                 />
@@ -265,18 +286,18 @@ export function Analysis({ onNavigate }: AnalysisProps) {
       {/* Monthly Offset Balance Trend */}
       {monthlyChartData.length > 0 && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Monthly Offset Balance</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Monthly Offset Balance</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: tickColor }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
@@ -310,7 +331,7 @@ export function Analysis({ onNavigate }: AnalysisProps) {
       {/* Insights */}
       {insights.length > 0 && (
         <div>
-          <h2 className="text-xl font-bold text-text-primary mb-4">Insights</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Insights</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {insights.map((insight) => {
               const config = insightConfig[insight.type]
@@ -322,8 +343,8 @@ export function Analysis({ onNavigate }: AnalysisProps) {
                       <Icon size={20} className={config.color} />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-text-primary">{insight.headline}</h3>
-                      <p className="text-sm text-text-secondary mt-1">{insight.detail}</p>
+                      <h3 className="font-semibold text-text-primary dark:text-white">{insight.headline}</h3>
+                      <p className="text-sm text-text-secondary dark:text-slate-400 mt-1">{insight.detail}</p>
                       {insight.annualSavingImpact != null && (
                         <p className="text-sm font-medium text-success mt-2">
                           Annual impact: {formatAUD(insight.annualSavingImpact)}

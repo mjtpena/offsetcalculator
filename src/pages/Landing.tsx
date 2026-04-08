@@ -17,9 +17,28 @@ import {
   Sparkles,
   ChevronRight,
 } from 'lucide-react'
+import { useInView } from '../hooks/useInView'
 
 interface LandingProps {
   onNavigate: (view: string) => void
+}
+
+function RevealSection({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const { ref, isVisible } = useInView({ threshold: 0.1 })
+  return (
+    <div ref={ref} className={`reveal ${isVisible ? 'visible' : ''} ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+function StaggerGrid({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const { ref, isVisible } = useInView({ threshold: 0.1 })
+  return (
+    <div ref={ref} className={`stagger-children ${isVisible ? 'visible' : ''} ${className}`}>
+      {children}
+    </div>
+  )
 }
 
 export function Landing({ onNavigate }: LandingProps) {
@@ -28,8 +47,8 @@ export function Landing({ onNavigate }: LandingProps) {
       {/* ─── Hero ─── */}
       <section className="gradient-hero relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-light rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-20 w-96 h-96 bg-secondary-light rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-light rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-20 w-96 h-96 bg-secondary-light rounded-full blur-3xl animate-pulse [animation-delay:2s]" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40 text-center">
@@ -75,19 +94,21 @@ export function Landing({ onNavigate }: LandingProps) {
       </section>
 
       {/* ─── Problem / Solution ─── */}
-      <section className="py-20 sm:py-28 bg-surface-alt">
+      <section className="py-20 sm:py-28 bg-surface-alt dark:bg-[#0b1120]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="section-title">
-              Offset calculators are{' '}
-              <span className="text-danger">broken</span>
-            </h2>
-            <p className="section-subtitle">
-              Here's why every broker needs a better tool
-            </p>
-          </div>
+          <RevealSection>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <h2 className="section-title">
+                Offset calculators are{' '}
+                <span className="text-danger">broken</span>
+              </h2>
+              <p className="section-subtitle">
+                Here's why every broker needs a better tool
+              </p>
+            </div>
+          </RevealSection>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <StaggerGrid className="grid md:grid-cols-3 gap-8">
             {[
               {
                 icon: LineChart,
@@ -120,29 +141,31 @@ export function Landing({ onNavigate }: LandingProps) {
                 >
                   <card.icon className={`w-7 h-7 ${card.color}`} />
                 </div>
-                <h3 className="text-xl font-bold text-text-primary mb-3">
+                <h3 className="text-xl font-bold text-text-primary dark:text-white mb-3">
                   {card.title}
                 </h3>
-                <p className="text-text-secondary leading-relaxed">
+                <p className="text-text-secondary dark:text-slate-400 leading-relaxed">
                   {card.description}
                 </p>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* ─── How It Works ─── */}
-      <section className="py-20 sm:py-28 bg-surface">
+      <section className="py-20 sm:py-28 bg-surface dark:bg-[#111827]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="section-title">How it works</h2>
-            <p className="section-subtitle">
-              From statement upload to actionable insight in under 60 seconds
-            </p>
-          </div>
+          <RevealSection>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <h2 className="section-title">How it works</h2>
+              <p className="section-subtitle">
+                From statement upload to actionable insight in under 60 seconds
+              </p>
+            </div>
+          </RevealSection>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 step: 1,
@@ -182,30 +205,32 @@ export function Landing({ onNavigate }: LandingProps) {
                     {item.step}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-text-primary mb-2">
+                <h3 className="text-lg font-bold text-text-primary dark:text-white mb-2">
                   {item.title}
                 </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="text-text-secondary dark:text-slate-400 text-sm leading-relaxed">
                   {item.description}
                 </p>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* ─── Key Features ─── */}
-      <section className="py-20 sm:py-28 bg-surface-alt">
+      <section className="py-20 sm:py-28 bg-surface-alt dark:bg-[#0b1120]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="section-title">Everything a broker needs</h2>
-            <p className="section-subtitle">
-              Powerful analysis tools that turn transaction data into client
-              conversations
-            </p>
-          </div>
+          <RevealSection>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <h2 className="section-title">Everything a broker needs</h2>
+              <p className="section-subtitle">
+                Powerful analysis tools that turn transaction data into client
+                conversations
+              </p>
+            </div>
+          </RevealSection>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 icon: CalendarDays,
@@ -246,17 +271,17 @@ export function Landing({ onNavigate }: LandingProps) {
             ].map((feature) => (
               <div key={feature.title} className="card-hover group">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-200">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                  <feature.icon className="w-6 h-6 text-primary dark:text-primary-light" />
                 </div>
-                <h3 className="text-lg font-bold text-text-primary mb-2">
+                <h3 className="text-lg font-bold text-text-primary dark:text-white mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="text-text-secondary dark:text-slate-400 text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
@@ -266,13 +291,15 @@ export function Landing({ onNavigate }: LandingProps) {
           <div className="absolute top-0 right-0 w-96 h-96 bg-accent rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-white">
-              The numbers speak for themselves
-            </h2>
-          </div>
+          <RevealSection>
+            <div className="text-center mb-14">
+              <h2 className="text-3xl font-bold text-white">
+                The numbers speak for themselves
+              </h2>
+            </div>
+          </RevealSection>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: Users,
@@ -297,7 +324,7 @@ export function Landing({ onNavigate }: LandingProps) {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm"
+                className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
               >
                 <stat.icon className="w-8 h-8 text-accent mx-auto mb-3" />
                 <div className="text-3xl sm:text-4xl font-bold text-white mb-1">
@@ -306,21 +333,23 @@ export function Landing({ onNavigate }: LandingProps) {
                 <div className="text-sm text-slate-400">{stat.label}</div>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* ─── Pricing ─── */}
-      <section className="py-20 sm:py-28 bg-surface">
+      <section className="py-20 sm:py-28 bg-surface dark:bg-[#111827]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <h2 className="section-title">Simple, transparent pricing</h2>
-            <p className="section-subtitle">
-              Start free. Upgrade when you're ready to impress more clients.
-            </p>
-          </div>
+          <RevealSection>
+            <div className="text-center max-w-2xl mx-auto mb-14">
+              <h2 className="section-title">Simple, transparent pricing</h2>
+              <p className="section-subtitle">
+                Start free. Upgrade when you're ready to impress more clients.
+              </p>
+            </div>
+          </RevealSection>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StaggerGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 name: 'Free',
@@ -388,7 +417,7 @@ export function Landing({ onNavigate }: LandingProps) {
             ].map((tier) => (
               <div
                 key={tier.name}
-                className={`relative rounded-2xl p-6 flex flex-col ${
+                className={`relative rounded-2xl p-6 flex flex-col transition-transform duration-300 hover:scale-[1.02] ${
                   tier.featured
                     ? 'bg-primary text-white shadow-xl shadow-primary/25 ring-2 ring-primary scale-[1.03] lg:scale-105'
                     : 'card'
@@ -402,7 +431,7 @@ export function Landing({ onNavigate }: LandingProps) {
 
                 <div className="mb-6">
                   <h3
-                    className={`text-lg font-bold ${tier.featured ? 'text-white' : 'text-text-primary'}`}
+                    className={`text-lg font-bold ${tier.featured ? 'text-white' : 'text-text-primary dark:text-white'}`}
                   >
                     {tier.name}
                   </h3>
@@ -415,7 +444,7 @@ export function Landing({ onNavigate }: LandingProps) {
 
                 <div className="mb-6">
                   <span
-                    className={`text-4xl font-extrabold ${tier.featured ? 'text-white' : 'text-text-primary'}`}
+                    className={`text-4xl font-extrabold ${tier.featured ? 'text-white' : 'text-text-primary dark:text-white'}`}
                   >
                     {tier.price}
                   </span>
@@ -434,7 +463,7 @@ export function Landing({ onNavigate }: LandingProps) {
                       />
                       <span
                         className={
-                          tier.featured ? 'text-white/90' : 'text-text-secondary'
+                          tier.featured ? 'text-white/90' : 'text-text-secondary dark:text-slate-400'
                         }
                       >
                         {f}
@@ -455,41 +484,43 @@ export function Landing({ onNavigate }: LandingProps) {
                 </button>
               </div>
             ))}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* ─── Final CTA ─── */}
-      <section className="py-20 sm:py-28 bg-surface-alt">
+      <section className="py-20 sm:py-28 bg-surface-alt dark:bg-[#0b1120]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary leading-tight">
-            Are you a broker?{' '}
-            <span className="text-primary">
-              Give this to your clients.
-            </span>
-          </h2>
-          <p className="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
-            Stop using spreadsheets and static calculators. Show your clients
-            the real value of their offset account — backed by their own
-            transaction data.
-          </p>
+          <RevealSection>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary dark:text-white leading-tight">
+              Are you a broker?{' '}
+              <span className="text-primary dark:text-primary-light">
+                Give this to your clients.
+              </span>
+            </h2>
+            <p className="mt-4 text-lg text-text-secondary dark:text-slate-400 max-w-2xl mx-auto">
+              Stop using spreadsheets and static calculators. Show your clients
+              the real value of their offset account — backed by their own
+              transaction data.
+            </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => onNavigate('calculator')}
-              className="btn-accent text-lg py-3 px-8 rounded-xl shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 hover:scale-105 transition-all duration-200"
-            >
-              Try the Free Calculator
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => onNavigate('import')}
-              className="btn-primary text-lg py-3 px-8 rounded-xl"
-            >
-              Import Statement
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => onNavigate('calculator')}
+                className="btn-accent text-lg py-3 px-8 rounded-xl shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 hover:scale-105 transition-all duration-200"
+              >
+                Try the Free Calculator
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => onNavigate('import')}
+                className="btn-primary text-lg py-3 px-8 rounded-xl"
+              >
+                Import Statement
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </RevealSection>
         </div>
       </section>
     </div>

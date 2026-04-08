@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #0f766e;
   --color-primary-light: #14b8a6;
@@ -19,22 +21,39 @@
   --color-border: #e2e8f0;
 }
 
+/* ─── Base ─── */
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* ─── Dark mode body ─── */
+.dark body,
+.dark #root {
+  background-color: #0b1120;
+  color: #e2e8f0;
+}
+
+/* ─── Gradients ─── */
 .gradient-primary {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
 }
 .gradient-hero {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
 }
+
+/* ─── Glass ─── */
 .glass {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+.dark .glass {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Cards ─── */
 .card {
   background-color: white;
   border-radius: 0.75rem;
@@ -42,46 +61,163 @@ body {
   border: 1px solid var(--color-border);
   padding: 1.5rem;
 }
+.dark .card {
+  background-color: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+}
+
 .card-hover {
   background-color: white;
   border-radius: 0.75rem;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   border: 1px solid var(--color-border);
   padding: 1.5rem;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .card-hover:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  border-color: rgb(15 118 110 / 0.2);
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.1), 0 4px 10px -4px rgb(0 0 0 / 0.08);
+  border-color: rgb(15 118 110 / 0.3);
+  transform: translateY(-2px);
+}
+.dark .card-hover {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+.dark .card-hover:hover {
+  background-color: #263548;
+  border-color: rgb(20 184 166 / 0.3);
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.4);
+}
+
+/* ─── Custom Range Slider ─── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary-light) var(--slider-fill, 50%), #e2e8f0 var(--slider-fill, 50%));
+  outline: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dark input[type="range"] {
+  background: linear-gradient(to right, var(--color-primary-light) 0%, var(--color-primary-light) var(--slider-fill, 50%), #334155 var(--slider-fill, 50%));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 10px rgb(15 118 110 / 0.35);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+  cursor: pointer;
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgb(15 118 110 / 0.25);
+}
+
+/* ─── View Transitions ─── */
+.view-enter {
+  animation: viewFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Scroll Reveal ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Stagger children ─── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 80ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
+
+/* ─── Toast ─── */
+.toast-enter {
+  animation: toastSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.toast-exit {
+  animation: toastSlideOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.96); }
 }
 
 @layer utilities {
   .btn-primary {
-    @apply bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2;
+    @apply bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
   }
   .btn-secondary {
-    @apply bg-white hover:bg-surface-alt text-text-primary font-semibold py-2.5 px-5 rounded-lg border border-border transition-all duration-200 inline-flex items-center gap-2;
+    @apply bg-white dark:bg-slate-800 hover:bg-surface-alt dark:hover:bg-slate-700 text-text-primary dark:text-slate-200 font-semibold py-2.5 px-5 rounded-lg border border-border dark:border-slate-600 transition-all duration-200 inline-flex items-center gap-2 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2;
   }
   .btn-accent {
-    @apply bg-accent hover:bg-amber-600 text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2;
+    @apply bg-accent hover:bg-amber-600 text-white font-semibold py-2.5 px-5 rounded-lg transition-all duration-200 inline-flex items-center gap-2 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2;
   }
   .input-field {
-    @apply w-full px-4 py-2.5 rounded-lg border border-border bg-white text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
+    @apply w-full px-4 py-2.5 rounded-lg border border-border dark:border-slate-600 bg-white dark:bg-slate-800 text-text-primary dark:text-slate-200 placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200;
   }
   .label {
-    @apply block text-sm font-medium text-text-secondary mb-1.5;
+    @apply block text-sm font-medium text-text-secondary dark:text-slate-400 mb-1.5;
   }
   .section-title {
-    @apply text-3xl font-bold text-text-primary;
+    @apply text-3xl font-bold text-text-primary dark:text-white;
   }
   .section-subtitle {
-    @apply text-lg text-text-secondary mt-2;
+    @apply text-lg text-text-secondary dark:text-slate-400 mt-2;
   }
   .stat-value {
-    @apply text-3xl font-bold text-primary;
+    @apply text-3xl font-bold text-primary dark:text-primary-light;
   }
   .stat-label {
-    @apply text-sm text-text-secondary mt-1;
+    @apply text-sm text-text-secondary dark:text-slate-400 mt-1;
   }
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
