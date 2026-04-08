@@ -8,6 +8,7 @@ import { extractCashflowPattern } from '../lib/projection'
 import { generateInsights } from '../lib/insights'
 import { buildScenarios } from '../lib/scenarios'
 import { generateDemoTransactions } from '../lib/demoData'
+import { showToast } from '../lib/toast'
 import type { Transaction, ParseWarning } from '../types'
 
 interface ImportProps {
@@ -108,6 +109,7 @@ export function Import({ onNavigate }: ImportProps) {
         end: demoTxns[demoTxns.length - 1].date,
       })
     }
+    showToast(`Loaded ${demoTxns.length} demo transactions`, 'success')
   }
 
   const handleRunAnalysis = async () => {
@@ -156,9 +158,11 @@ export function Import({ onNavigate }: ImportProps) {
       setInsights(insights)
 
       // 8. Navigate to analysis view
+      showToast('Analysis complete! Redirecting…', 'success')
       onNavigate('analysis')
     } catch (err) {
       console.error('Analysis failed:', err)
+      showToast('Analysis failed. Please check your data.', 'error')
       setIsProcessing(false)
       setStep('upload')
     }
@@ -170,7 +174,7 @@ export function Import({ onNavigate }: ImportProps) {
   // Step 1: Loan Details
   if (step === 'loan') {
     return (
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto space-y-6 py-8 px-4">
         <div>
           <h1 className="section-title">Loan Details</h1>
           <p className="section-subtitle">Enter your home loan details to calculate offset savings accurately.</p>
@@ -245,7 +249,7 @@ export function Import({ onNavigate }: ImportProps) {
                   onChange={() => handleLoanFormChange('repaymentType', 'PI')}
                   className="text-primary"
                 />
-                <span className="text-text-primary">Principal & Interest</span>
+                <span className="text-text-primary dark:text-slate-200">Principal & Interest</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -256,7 +260,7 @@ export function Import({ onNavigate }: ImportProps) {
                   onChange={() => handleLoanFormChange('repaymentType', 'IO')}
                   className="text-primary"
                 />
-                <span className="text-text-primary">Interest Only</span>
+                <span className="text-text-primary dark:text-slate-200">Interest Only</span>
               </label>
             </div>
           </div>
@@ -286,11 +290,11 @@ export function Import({ onNavigate }: ImportProps) {
   // Step 3: Processing
   if (step === 'processing') {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto py-8 px-4">
         <div className="card text-center py-16 space-y-4">
-          <div className="animate-spin mx-auto w-12 h-12 border-4 border-primary border-t-transparent rounded-full" />
-          <h2 className="text-xl font-semibold text-text-primary">Analysing your data…</h2>
-          <p className="text-text-secondary">Reconstructing balances, calculating interest, and building projections.</p>
+          <div className="animate-spin mx-auto w-12 h-12 border-4 border-primary dark:border-primary-light border-t-transparent rounded-full" />
+          <h2 className="text-xl font-semibold text-text-primary dark:text-white">Analysing your data…</h2>
+          <p className="text-text-secondary dark:text-slate-400">Reconstructing balances, calculating interest, and building projections.</p>
         </div>
       </div>
     )
@@ -302,7 +306,7 @@ export function Import({ onNavigate }: ImportProps) {
   const previewTxns = parsedTransactions.slice(0, 20)
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 py-8 px-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="section-title">Import Statement</h1>
@@ -317,8 +321,8 @@ export function Import({ onNavigate }: ImportProps) {
       <div
         className={`card border-2 border-dashed transition-all duration-200 text-center py-12 cursor-pointer ${
           isDragging
-            ? 'border-primary bg-primary/5'
-            : 'border-border hover:border-primary/40'
+            ? 'border-primary bg-primary/5 dark:bg-primary/10'
+            : 'border-border dark:border-slate-600 hover:border-primary/40'
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -333,10 +337,10 @@ export function Import({ onNavigate }: ImportProps) {
           onChange={handleFileSelect}
         />
         <Upload className={`w-12 h-12 mx-auto mb-4 ${isDragging ? 'text-primary' : 'text-text-muted'}`} />
-        <p className="text-lg font-medium text-text-primary">
+        <p className="text-lg font-medium text-text-primary dark:text-white">
           {isDragging ? 'Drop your file here' : 'Drag & drop your statement file'}
         </p>
-        <p className="text-sm text-text-secondary mt-1">
+        <p className="text-sm text-text-secondary dark:text-slate-400 mt-1">
           or click to browse • Supports .csv
         </p>
       </div>
@@ -368,23 +372,23 @@ export function Import({ onNavigate }: ImportProps) {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-surface-alt rounded-lg p-3">
-                <p className="text-sm text-text-secondary">Transactions</p>
-                <p className="text-xl font-bold text-text-primary">{parsedTransactions.length}</p>
+              <div className="bg-surface-alt dark:bg-slate-800/50 rounded-lg p-3">
+                <p className="text-sm text-text-secondary dark:text-slate-400">Transactions</p>
+                <p className="text-xl font-bold text-text-primary dark:text-white">{parsedTransactions.length}</p>
               </div>
-              <div className="bg-surface-alt rounded-lg p-3">
-                <p className="text-sm text-text-secondary">Date Range</p>
-                <p className="text-sm font-medium text-text-primary">
+              <div className="bg-surface-alt dark:bg-slate-800/50 rounded-lg p-3">
+                <p className="text-sm text-text-secondary dark:text-slate-400">Date Range</p>
+                <p className="text-sm font-medium text-text-primary dark:text-white">
                   {dateRange?.start} → {dateRange?.end}
                 </p>
               </div>
-              <div className="bg-surface-alt rounded-lg p-3">
-                <p className="text-sm text-text-secondary">Opening Balance</p>
-                <p className="text-xl font-bold text-text-primary">{formatCurrency(openingBalance)}</p>
+              <div className="bg-surface-alt dark:bg-slate-800/50 rounded-lg p-3">
+                <p className="text-sm text-text-secondary dark:text-slate-400">Opening Balance</p>
+                <p className="text-xl font-bold text-text-primary dark:text-white">{formatCurrency(openingBalance)}</p>
               </div>
-              <div className="bg-surface-alt rounded-lg p-3">
-                <p className="text-sm text-text-secondary">Closing Balance</p>
-                <p className="text-xl font-bold text-text-primary">{formatCurrency(closingBalance)}</p>
+              <div className="bg-surface-alt dark:bg-slate-800/50 rounded-lg p-3">
+                <p className="text-sm text-text-secondary dark:text-slate-400">Closing Balance</p>
+                <p className="text-xl font-bold text-text-primary dark:text-white">{formatCurrency(closingBalance)}</p>
               </div>
             </div>
           </div>
@@ -411,24 +415,24 @@ export function Import({ onNavigate }: ImportProps) {
 
           {/* Transaction Preview */}
           <div className="card space-y-4">
-            <h3 className="font-semibold text-text-primary">
+            <h3 className="font-semibold text-text-primary dark:text-white">
               Transaction Preview {parsedTransactions.length > 20 && `(showing 20 of ${parsedTransactions.length})`}
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-2 pr-4 text-text-secondary font-medium">Date</th>
-                    <th className="text-left py-2 pr-4 text-text-secondary font-medium">Description</th>
-                    <th className="text-right py-2 pr-4 text-text-secondary font-medium">Amount</th>
-                    <th className="text-right py-2 text-text-secondary font-medium">Balance</th>
+                  <tr className="border-b border-border dark:border-slate-700">
+                    <th className="text-left py-2 pr-4 text-text-secondary dark:text-slate-400 font-medium">Date</th>
+                    <th className="text-left py-2 pr-4 text-text-secondary dark:text-slate-400 font-medium">Description</th>
+                    <th className="text-right py-2 pr-4 text-text-secondary dark:text-slate-400 font-medium">Amount</th>
+                    <th className="text-right py-2 text-text-secondary dark:text-slate-400 font-medium">Balance</th>
                   </tr>
                 </thead>
                 <tbody>
                   {previewTxns.map((txn, i) => (
-                    <tr key={i} className="border-b border-border/50">
-                      <td className="py-2 pr-4 text-text-primary whitespace-nowrap">{txn.date}</td>
-                      <td className="py-2 pr-4 text-text-primary truncate max-w-[250px]">{txn.description}</td>
+                    <tr key={i} className="border-b border-border/50 dark:border-slate-700/50">
+                      <td className="py-2 pr-4 text-text-primary dark:text-slate-200 whitespace-nowrap">{txn.date}</td>
+                      <td className="py-2 pr-4 text-text-primary dark:text-slate-200 truncate max-w-[250px]">{txn.description}</td>
                       <td className={`py-2 pr-4 text-right whitespace-nowrap font-medium ${
                         txn.amount >= 0 ? 'text-success' : 'text-danger'
                       }`}>

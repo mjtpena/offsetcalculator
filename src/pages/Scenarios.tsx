@@ -63,7 +63,7 @@ export function Scenarios() {
         <div className="card max-w-lg mx-auto">
           <GitCompare size={48} className="mx-auto text-text-muted mb-4" />
           <h2 className="section-title text-xl">No Scenarios Available</h2>
-          <p className="text-text-secondary mt-2">
+          <p className="text-text-secondary dark:text-slate-400 mt-2">
             Generate projections first to compare scenarios side by side.
           </p>
         </div>
@@ -84,19 +84,19 @@ export function Scenarios() {
       {/* Multi-scenario Chart */}
       {chartData.length > 0 && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Projected Offset Balance</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Projected Offset Balance</h2>
           <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0'} />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                   tickLine={false}
                   interval="preserveStartEnd"
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
@@ -106,7 +106,7 @@ export function Scenarios() {
                     const label = payload[0]?.payload?.label
                     return (
                       <div className="card !p-3 !shadow-lg text-sm">
-                        <p className="font-semibold text-text-primary mb-1">{label}</p>
+                        <p className="font-semibold text-text-primary dark:text-white mb-1">{label}</p>
                         {payload.map((entry) => {
                           const scenario = scenarios.find((s) => s.id === entry.dataKey)
                           return (
@@ -149,27 +149,27 @@ export function Scenarios() {
           <div key={s.id} className="card-hover">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-              <h3 className="font-semibold text-text-primary truncate">{s.label}</h3>
+              <h3 className="font-semibold text-text-primary dark:text-white truncate">{s.label}</h3>
               {s.isBaseline && <span className="badge-success ml-auto shrink-0">Baseline</span>}
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary flex items-center gap-1.5">
+                <span className="text-sm text-text-secondary dark:text-slate-400 flex items-center gap-1.5">
                   <DollarSign size={14} /> Total Saving
                 </span>
                 <span className="font-semibold text-success">{formatAUD(s.totalSaving)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary flex items-center gap-1.5">
+                <span className="text-sm text-text-secondary dark:text-slate-400 flex items-center gap-1.5">
                   <Calendar size={14} /> Payoff Date
                 </span>
-                <span className="font-semibold text-text-primary">{s.loanPayoffDate}</span>
+                <span className="font-semibold text-text-primary dark:text-white">{s.loanPayoffDate}</span>
               </div>
               {s.vsBaseline && !s.isBaseline && (
                 <>
-                  <div className="pt-2 border-t border-border flex items-center justify-between">
-                    <span className="text-sm text-text-secondary">vs Baseline</span>
+                  <div className="pt-2 border-t border-border dark:border-slate-700 flex items-center justify-between">
+                    <span className="text-sm text-text-secondary dark:text-slate-400">vs Baseline</span>
                     <span
                       className={`font-semibold ${
                         s.vsBaseline.savingDifference >= 0 ? 'text-success' : 'text-danger'
@@ -180,7 +180,7 @@ export function Scenarios() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-text-secondary flex items-center gap-1.5">
+                    <span className="text-sm text-text-secondary dark:text-slate-400 flex items-center gap-1.5">
                       <TrendingUp size={14} /> Months Earlier
                     </span>
                     <span className="font-semibold text-primary">
@@ -198,11 +198,11 @@ export function Scenarios() {
 
       {/* Comparison Table */}
       <div className="card overflow-x-auto">
-        <h2 className="text-xl font-bold text-text-primary mb-4">Detailed Comparison</h2>
+        <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Detailed Comparison</h2>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border">
-              <th className="text-left py-3 pr-4 text-text-secondary font-medium">Metric</th>
+            <tr className="border-b border-border dark:border-slate-700">
+              <th className="text-left py-3 pr-4 text-text-secondary dark:text-slate-400 font-medium">Metric</th>
               {scenarios.map((s) => (
                 <th key={s.id} className="text-right py-3 px-4 font-medium" style={{ color: s.color }}>
                   {s.label}
@@ -210,19 +210,19 @@ export function Scenarios() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-border dark:divide-slate-700">
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Total Saving</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Total Saving</td>
               {scenarios.map((s) => (
-                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary">
+                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary dark:text-white">
                   {formatAUD(s.totalSaving)}
                 </td>
               ))}
             </tr>
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Monthly Avg Saving</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Monthly Avg Saving</td>
               {scenarios.map((s) => (
-                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary">
+                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary dark:text-white">
                   {s.monthlyData.length > 0
                     ? formatAUD(s.totalSaving / s.monthlyData.length)
                     : '—'}
@@ -230,15 +230,15 @@ export function Scenarios() {
               ))}
             </tr>
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Payoff Date</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Payoff Date</td>
               {scenarios.map((s) => (
-                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary">
+                <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary dark:text-white">
                   {s.loanPayoffDate}
                 </td>
               ))}
             </tr>
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Months Earlier</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Months Earlier</td>
               {scenarios.map((s) => (
                 <td key={s.id} className="py-3 px-4 text-right font-semibold text-primary">
                   {s.vsBaseline ? `${s.vsBaseline.monthsEarlier}` : '—'}
@@ -246,22 +246,22 @@ export function Scenarios() {
               ))}
             </tr>
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Year 1 Saving</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Year 1 Saving</td>
               {scenarios.map((s) => {
                 const val = getYearSaving(s, 1)
                 return (
-                  <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary">
+                  <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary dark:text-white">
                     {val != null ? formatAUD(val) : '—'}
                   </td>
                 )
               })}
             </tr>
             <tr>
-              <td className="py-3 pr-4 text-text-secondary">Year 5 Saving</td>
+              <td className="py-3 pr-4 text-text-secondary dark:text-slate-400">Year 5 Saving</td>
               {scenarios.map((s) => {
                 const val = getYearSaving(s, 5)
                 return (
-                  <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary">
+                  <td key={s.id} className="py-3 px-4 text-right font-semibold text-text-primary dark:text-white">
                     {val != null ? formatAUD(val) : '—'}
                   </td>
                 )
@@ -272,8 +272,8 @@ export function Scenarios() {
       </div>
 
       {/* Disclaimer */}
-      <div className="card bg-surface-alt">
-        <p className="text-xs text-text-muted leading-relaxed">
+      <div className="card bg-surface-alt dark:bg-slate-800/50">
+        <p className="text-xs text-text-muted dark:text-slate-500 leading-relaxed">
           This analysis is prepared using OffsetIQ and is intended for general information and educational
           purposes only. It does not constitute financial advice, a recommendation, or an offer to engage
           in any transaction. The projections and scenarios shown are based on assumptions that may not

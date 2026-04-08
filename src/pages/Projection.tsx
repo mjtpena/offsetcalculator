@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { useStore } from '../store/useStore'
 import { buildScenarios } from '../lib/scenarios'
+import { AnimatedNumber } from '../components/ui/AnimatedNumber'
 
 const formatAUD = (value: number) =>
   new Intl.NumberFormat('en-AU', {
@@ -154,7 +155,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
         <div className="card max-w-lg mx-auto">
           <TrendingUp size={48} className="mx-auto text-text-muted mb-4" />
           <h2 className="section-title text-xl">No Projection Data</h2>
-          <p className="text-text-secondary mt-2">
+          <p className="text-text-secondary dark:text-slate-400 mt-2">
             Run an analysis first to generate forward projections.
           </p>
           <button className="btn-primary mt-6" onClick={() => onNavigate('analysis')}>
@@ -185,27 +186,35 @@ export function Projection({ onNavigate }: ProjectionProps) {
             </div>
             <span className="stat-label !mt-0">Projected Savings</span>
           </div>
-          <p className="text-3xl font-bold text-success">{formatAUD(projectedSavings12)}</p>
+          <AnimatedNumber
+            value={projectedSavings12}
+            format={(v) => formatAUD(v)}
+            className="text-3xl font-bold text-success"
+          />
         </div>
 
         <div className="card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingUp size={18} className="text-primary" />
+              <TrendingUp size={18} className="text-primary dark:text-primary-light" />
             </div>
             <span className="stat-label !mt-0">Monthly Savings Rate</span>
           </div>
-          <p className="stat-value">{formatAUD(monthlySavings)}</p>
+          <AnimatedNumber
+            value={monthlySavings}
+            format={(v) => formatAUD(v)}
+            className="stat-value"
+          />
         </div>
 
         <div className="card">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
-              <Calendar size={18} className="text-secondary" />
+              <Calendar size={18} className="text-secondary dark:text-secondary-light" />
             </div>
             <span className="stat-label !mt-0">Est. Payoff Date</span>
           </div>
-          <p className="text-2xl font-bold text-text-primary">{payoffDate}</p>
+          <p className="text-2xl font-bold text-text-primary dark:text-white">{payoffDate}</p>
         </div>
 
         <div className="card">
@@ -224,7 +233,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
       {/* Projection Chart */}
       {projectionChartData.length > 0 && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Projected Offset Balance</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Projected Offset Balance</h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={projectionChartData}>
@@ -234,22 +243,22 @@ export function Projection({ onNavigate }: ProjectionProps) {
                     <stop offset="95%" stopColor="#0f766e" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0'} />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                   tickLine={false}
                 />
                 <YAxis
                   yAxisId="balance"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
                 <YAxis
                   yAxisId="loan"
                   orientation="right"
-                  tick={{ fontSize: 12, fill: '#94a3b8' }}
+                  tick={{ fontSize: 12, fill: document.documentElement.classList.contains('dark') ? '#64748b' : '#94a3b8' }}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                 />
@@ -259,9 +268,9 @@ export function Projection({ onNavigate }: ProjectionProps) {
                     const d = payload[0].payload as (typeof projectionChartData)[0]
                     return (
                       <div className="card !p-3 !shadow-lg text-sm">
-                        <p className="font-semibold text-text-primary mb-1">{d.label}</p>
+                        <p className="font-semibold text-text-primary dark:text-white mb-1">{d.label}</p>
                         <p className="text-primary">Balance: {formatAUD(d.projectedBalance)}</p>
-                        <p className="text-text-secondary">Loan: {formatAUD(d.loanBalance)}</p>
+                        <p className="text-text-secondary dark:text-slate-400">Loan: {formatAUD(d.loanBalance)}</p>
                         <p className="text-success">Saved: {formatAUD(d.cumulativeSaving)}</p>
                       </div>
                     )
@@ -296,50 +305,50 @@ export function Projection({ onNavigate }: ProjectionProps) {
       {/* Cashflow Pattern */}
       {cashflowPattern && (
         <div className="card">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Cashflow Pattern</h2>
+          <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Cashflow Pattern</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-text-secondary">Salary</span>
-                <span className="font-semibold text-text-primary">
+              <div className="flex justify-between items-center py-2 border-b border-border dark:border-slate-700">
+                <span className="text-text-secondary dark:text-slate-400">Salary</span>
+                <span className="font-semibold text-text-primary dark:text-white">
                   {formatAUD(cashflowPattern.salaryAmount)}{' '}
                   <span className="text-sm text-text-muted">
                     ({FREQUENCY_LABELS[cashflowPattern.salaryFrequency]})
                   </span>
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-text-secondary">Avg Monthly Income</span>
+              <div className="flex justify-between items-center py-2 border-b border-border dark:border-slate-700">
+                <span className="text-text-secondary dark:text-slate-400">Avg Monthly Income</span>
                 <span className="font-semibold text-success">
                   {formatAUD(cashflowPattern.avgMonthlyIncome)}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-text-secondary">Avg Monthly Expenses</span>
+              <div className="flex justify-between items-center py-2 border-b border-border dark:border-slate-700">
+                <span className="text-text-secondary dark:text-slate-400">Avg Monthly Expenses</span>
                 <span className="font-semibold text-danger">
                   {formatAUD(cashflowPattern.avgMonthlyExpenses)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-text-secondary">Net Savings</span>
+                <span className="text-text-secondary dark:text-slate-400">Net Savings</span>
                 <span className="font-semibold text-primary">
                   {formatAUD(cashflowPattern.avgNetSavings)}
                 </span>
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-text-secondary mb-2">Monthly Spending Pattern</h3>
+              <h3 className="text-sm font-medium text-text-secondary dark:text-slate-400 mb-2">Monthly Spending Pattern</h3>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={spendingChartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <CartesianGrid strokeDasharray="3 3" stroke={document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0'} />
                     <XAxis
                       dataKey="month"
-                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tick={{ fontSize: 11, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      tick={{ fontSize: 11, fill: document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' }}
                       tickLine={false}
                       tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                     />
@@ -348,7 +357,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
                         if (!active || !payload?.[0]) return null
                         return (
                           <div className="card !p-3 !shadow-lg text-sm">
-                            <p className="font-semibold text-text-primary">{label}</p>
+                            <p className="font-semibold text-text-primary dark:text-white">{label}</p>
                             <p className="text-primary">{formatAUD(payload[0].value as number)}</p>
                           </div>
                         )
@@ -365,7 +374,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
 
       {/* Projection Controls */}
       <div className="card">
-        <h2 className="text-xl font-bold text-text-primary mb-4">Projection Controls</h2>
+        <h2 className="text-xl font-bold text-text-primary dark:text-white mb-4">Projection Controls</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Period */}
           <div>
@@ -377,7 +386,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     projectionConfig.projectionMonths === months
                       ? 'bg-primary text-white'
-                      : 'bg-surface-alt text-text-secondary hover:bg-primary/10'
+                      : 'bg-surface-alt dark:bg-slate-700 text-text-secondary dark:text-slate-300 hover:bg-primary/10'
                   }`}
                   onClick={() => setProjectionConfig({ projectionMonths: months })}
                 >
@@ -423,12 +432,12 @@ export function Projection({ onNavigate }: ProjectionProps) {
         </div>
 
         {/* Lump Sum Events */}
-        <div className="mt-6 pt-6 border-t border-border">
-          <h3 className="text-sm font-semibold text-text-primary mb-3">Lump Sum Events</h3>
+        <div className="mt-6 pt-6 border-t border-border dark:border-slate-700">
+          <h3 className="text-sm font-semibold text-text-primary dark:text-white mb-3">Lump Sum Events</h3>
           {(projectionConfig.lumpSumEvents ?? []).map((ev, i) => (
             <div key={i} className="flex items-center gap-3 mb-2 text-sm">
-              <span className="text-text-secondary">{ev.date}</span>
-              <span className="font-medium text-text-primary">{formatAUD(ev.amount)}</span>
+              <span className="text-text-secondary dark:text-slate-400">{ev.date}</span>
+              <span className="font-medium text-text-primary dark:text-white">{formatAUD(ev.amount)}</span>
               <span className="text-text-muted">{ev.label}</span>
               <button
                 onClick={() => handleRemoveLumpSum(i)}
@@ -467,12 +476,12 @@ export function Projection({ onNavigate }: ProjectionProps) {
         </div>
 
         {/* Rate Change Events */}
-        <div className="mt-6 pt-6 border-t border-border">
-          <h3 className="text-sm font-semibold text-text-primary mb-3">Rate Change Events</h3>
+        <div className="mt-6 pt-6 border-t border-border dark:border-slate-700">
+          <h3 className="text-sm font-semibold text-text-primary dark:text-white mb-3">Rate Change Events</h3>
           {(projectionConfig.rateChangeEvents ?? []).map((ev, i) => (
             <div key={i} className="flex items-center gap-3 mb-2 text-sm">
-              <span className="text-text-secondary">{ev.date}</span>
-              <span className="font-medium text-text-primary">{(ev.newRate * 100).toFixed(2)}%</span>
+              <span className="text-text-secondary dark:text-slate-400">{ev.date}</span>
+              <span className="font-medium text-text-primary dark:text-white">{(ev.newRate * 100).toFixed(2)}%</span>
               <button
                 onClick={() => handleRemoveRateChange(i)}
                 className="text-danger hover:text-red-700 ml-auto"
@@ -506,8 +515,7 @@ export function Projection({ onNavigate }: ProjectionProps) {
 
       {/* Bottom */}
       <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <p className="text-sm text-text-secondary">
-          Based on {loan.lender || 'your loan'} at {(loan.annualRate * 100).toFixed(2)}% p.a. ·{' '}
+        <p className="text-sm text-text-secondary dark:text-slate-400">
           {formatAUD(loan.currentBalance)} remaining
         </p>
         <button className="btn-primary" onClick={() => onNavigate('scenarios')}>

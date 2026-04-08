@@ -5,7 +5,7 @@ export function Footer() {
         <div className="grid md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-bold mb-3">OffsetIQ</h3>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-400 text-sm leading-relaxed">
               Show your clients what their offset is actually doing. Built by Datachain Consulting.
             </p>
           </div>
